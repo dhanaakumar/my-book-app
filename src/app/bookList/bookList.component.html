@@ -1,0 +1,53 @@
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        {{heading}}
+    </div>
+    <div class="panel-body">
+            <div class="row">
+                <p class="col-md-3">Search Books:</p>
+                <input class="col-md-2" type="text" [(ngModel)]="searchInput" (keydown.enter)="searchBooks()" /><br/><br/>
+            </div>
+        <div class="row">
+            <p class="col-md-3">Filter as per bookName:</p>
+            <input class="col-md-2" type="text" [(ngModel)]="userInput" /><br/><br/>
+        </div>
+        <div class="row">
+            <p class="col-md-2">Filtered as per:{{userInput}}</p>
+        </div>
+        <table class="table" *ngIf="bookLists && bookLists.length; else loader">
+            <thead>
+                <tr>
+                    <th><button class="btn btn-primary" (click)="showHideMethod()">Show Image</button></th>
+                    <th>Book Name</th>
+                    <th>Author</th>
+                    <th>Publisher</th>
+                    <th>Publish Date</th>
+                    <th>MoreInfo</th>
+                    <th>Avg.Rating</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let bookList of bookLists | filterPipe : userInput">
+                    <td><img *ngIf="show" [src]="bookList.volumeInfo.imageLinks.thumbnail" [style.width.px]="imageWidth"
+                            [style.height.px]="imageHeight" /></td>
+                    <td>{{bookList.volumeInfo.title}}</td>
+                    <td>{{bookList.volumeInfo.authors[0]}}</td>
+                    <td>{{bookList.volumeInfo.publisher | uppercase }}</td>
+                    <td>{{bookList.volumeInfo.publishedDate}}</td>
+                    <td><a [href]= bookList.volumeInfo.infoLink class="btn btn-danger">Read More</a></td>
+                    <td>
+                        <app-star [rating]="bookList.volumeInfo.averageRating" (passRatingValue)=messageRecived($event)></app-star>
+                    </td>
+                </tr>
+                <tr>
+                    <td> {{message}}</td>
+                </tr>
+            </tbody>
+
+
+        </table>
+        <ng-template #loader>
+            <img src="../../assets/giphy.gif">        
+        </ng-template>
+    </div>
+</div>
